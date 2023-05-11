@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         AppKey appKey = new AppKey("MC0CFQCCZVzNP52xT1qcAFuzC1v+d0wAvwIUeWjo449lobxw1jtB3sf23C68PXM=",
-                "at.wolframdental.Scanner",
+                "android:at.wolframdental.Scanner",
                 "e1c1ca5c-fcda-ed11-a7c7-6045bd074938");
 //        startSocketCamExtension();
         mCaptureClient = new CaptureClient(appKey);
@@ -810,6 +810,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onExtensionStateChanged(ConnectionState connectionState) {
             switch (connectionState.intValue()) {
+                case ConnectionState.CONNECTED:
+                    mCaptureClient.setSocketCamStatus(SocketCamStatus.ENABLE, new PropertyCallback() {
+                        @Override
+                        public void onComplete(CaptureError captureError, Property property) {
+                            if (captureError != null) {
+                                Log.d(tag, "Failed setSocketCamStatus " + captureError.getMessage());
+                            }
+                        }
+                    });
+                    break;
                 case ConnectionState.READY:
                     break;
                 case ConnectionState.DISCONNECTED:
