@@ -809,6 +809,7 @@ public class MainActivity extends AppCompatActivity {
     CaptureExtension.Listener mListener = new CaptureExtension.Listener() {
         @Override
         public void onExtensionStateChanged(ConnectionState connectionState) {
+
             switch (connectionState.intValue()) {
                 case ConnectionState.CONNECTED:
                     mCaptureClient.setSocketCamStatus(SocketCamStatus.ENABLE, new PropertyCallback() {
