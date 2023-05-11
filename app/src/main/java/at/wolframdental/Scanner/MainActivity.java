@@ -648,8 +648,18 @@ public class MainActivity extends AppCompatActivity {
             mCaptureExtension.stop();
     }
 
+    interface SocketCamDeviceReadyListener {
+        void onSocketCamDeviceReady();
+    }
+    private SocketCamDeviceReadyListener socketCamDeviceReadyListener = null;
     public void startSocketCamExtension() {
         if(mCaptureClient != null) {
+            socketCamDeviceReadyListener = new SocketCamDeviceReadyListener() {
+                @Override
+                public void onSocketCamDeviceReady() {
+                    triggerDevices();
+                }
+            };
             mCaptureExtension = new CaptureExtension.Builder()
                     .setContext(this)
                     .setClientHandle(mCaptureClient.getHandle())
@@ -706,7 +716,9 @@ public class MainActivity extends AppCompatActivity {
             }
             case DeviceState.READY: {
                 Log.d(tag, "Scanner State Ready.");
-                triggerDevices();
+                if (socketCamDeviceReadyListener != null)
+                    socketCamDeviceReadyListener.onSocketCamDeviceReady();
+                socketCamDeviceReadyListener = null;
                 break;
             }
             case DeviceState.GONE: {
